@@ -196,6 +196,7 @@
   %endif
 
   % if duplicate_provider:
+<div>200 /edx/app/edxapp/themes/FDtheme/templates/dashboard.html</div>
     <section class="dashboard-banner third-party-auth">
       ## Translators: this message is displayed when a user tries to link their account with a third-party authentication provider (for example, Google or LinkedIn) with a given edX account, but their third-party account is already associated with another edX account. provider_name is the name of the third-party authentication provider, and platform_name is the name of the edX deployment.
       ${_('The selected {provider_name} account is already linked to another {platform_name} account. Please {link_start}log out{link_end}, then log in with your {provider_name} account.').format(link_end='</a>', link_start='<a href="%s">' % logout_url, provider_name='<strong>%s</strong>' % duplicate_provider.NAME, platform_name=platform_name)}
@@ -314,6 +315,7 @@
             ${_("Find courses now!")}
           </a>
         % else:
+<div>320 /edx/app/edxapp/themes/FDtheme/templates/dashboard.html</div>
           <p>${_("Looks like you haven't been enrolled in any courses yet.")}</p>
         %endif
       </section>
@@ -323,6 +325,7 @@
       <div id="course-errors">
         <h2>${_("Course-loading errors")}</h2>
 
+<div>330 /edx/app/edxapp/themes/FDtheme/templates/dashboard.html</div>
       % for course_dir, errors in errored_courses.items():
          <h3>${course_dir | h}</h3>
              <ul>
@@ -332,6 +335,7 @@
                </li>
            % endfor
              </ul>
+<div>340 /edx/app/edxapp/themes/FDtheme/templates/dashboard.html</div>
       % endfor
     % endif
   </section>
@@ -345,6 +349,7 @@
         ## Translators: this is a control to allow users to exit out of this modal interface (a menu or piece of UI that takes the full focus of the screen)
         ${_('Close')}
       </span>
+<div>350 /edx/app/edxapp/themes/FDtheme/templates/dashboard.html</div>
     </button>
 
     <header>
@@ -394,6 +399,7 @@
       <form> <!-- Here for styling reasons -->
         <section>
           <p>${_('An email has been sent to {email}. Follow the link in the email to change your password.').format(email=user.email)}</p>
+<div>400 /edx/app/edxapp/themes/FDtheme/templates/dashboard.html</div>
         </section>
       </form>
     </div>
@@ -496,6 +502,7 @@
         ${_('Close')}
       </span>
     </button>
+<div>500 /edx/app/edxapp/themes/FDtheme/templates/dashboard.html</div>
 
     <header>
       <h2 id="unenrollment-modal-title">
