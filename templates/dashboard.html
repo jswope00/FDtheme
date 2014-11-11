@@ -120,6 +120,34 @@
       return false;
     });
 
+    $("#change_extra_form").submit(function(){
+      var password = $('#extra_password').val();
+      var employee = $('#extra_employee_field').val();
+      var div = $('#extra_div_field').val();
+      var sm = $('#extra_sm_field').val();
+      var dept = $('#extra_dept_field').val();
+      var reports_to = $('#extra_reports_to_field').val();
+      var extra_data = {"password": password, "employee": employee, "div": div,
+         "sm": sm, "dept": dept, "reports_to": reports_to}
+
+      $.post('${reverse("change_extra")}',
+               extra_data,
+               function(data) {
+                 if (data.success) {
+                   $("#change_extra_title").html("${_('Extra fields updated')}");
+                   $("#change_extra_error").css("display", "none");
+                   for (field in extra_data)
+                   {
+                     if (field=='password') continue;
+                     $('#extra_'+field+'_val').text(extra_data[field]);
+                   }
+                 } else {
+                   $("#change_extra_error").html(data.error).stop().css("display", "block");
+                 }
+               });
+      return false;
+    });
+
     $("#change_name_form").submit(function(){
       var new_name = $('#new_name_field').val();
       var rationale = $('#name_rationale_field').val();
@@ -161,6 +189,8 @@
 
     accessible_modal(".edit-email", "#change_email .close-modal", "#change_email", "#dashboard-main");
 
+    accessible_modal(".edit-extra", "#change_extra .close-modal", "#change_extra", "#dashboard-main");
+
     accessible_modal("#pwd_reset_button", "#password_reset_complete .close-modal", "#password_reset_complete", "#dashboard-main");
 
 
@@ -196,7 +226,6 @@
   %endif
 
   % if duplicate_provider:
-<div>200 /edx/app/edxapp/themes/FDtheme/templates/dashboard.html</div>
     <section class="dashboard-banner third-party-auth">
       ## Translators: this message is displayed when a user tries to link their account with a third-party authentication provider (for example, Google or LinkedIn) with a given edX account, but their third-party account is already associated with another edX account. provider_name is the name of the third-party authentication provider, and platform_name is the name of the edX deployment.
       ${_('The selected {provider_name} account is already linked to another {platform_name} account. Please {link_start}log out{link_end}, then log in with your {provider_name} account.').format(link_end='</a>', link_start='<a href="%s">' % logout_url, provider_name='<strong>%s</strong>' % duplicate_provider.NAME, platform_name=platform_name)}
@@ -218,6 +247,34 @@
             (<a href="#change_email" rel="leanModal" class="edit-email">${_("edit")}</a>)
             % endif
           </span> <span class="data">${ user.email | h }</span>
+        </li>
+        <li class="info--extra">
+          <span class="title">${_("Extra User Data")}
+            (<a href="#change_extra" rel="leanModal" class="edit-extra">${_("edit")}</a>)
+          </span>
+          <%!
+            def ue_field(user, field):
+               ue = getattr(user, 'userextra', None)
+               if ue:
+                   return getattr(ue, field, '')
+               else:
+                   return ''
+          %>
+          <div id="extra_present" style="display: ${'block' if hasattr(user, 'userextra') else 'none'}">
+            % for label, field in (('Employee ID:', 'employee'), ('Div:', 'div'), ('SM:', 'sm'), ('Dept:', 'dept'), ('Reports To:', 'reports_to')):
+              <span class="data">
+                ${label}
+                <span id="extra_${field}_val" style="display: inline">
+                  ${ ue_field(user, field) | h }
+                </span>
+              </span>
+            % endfor
+          </div>
+          <div id="extra_present" style="display: ${'none' if hasattr(user, 'userextra') else 'block'}">
+            <span class="data">
+              Not filled yet
+            </span>
+          </div>
         </li>
 
         %if len(language_options) > 1:
@@ -441,6 +498,47 @@
           </section>
           <div class="submit">
             <input type="submit" id="submit_email_change" value="${_('Change Email')}"/>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section id="change_extra" class="modal" aria-hidden="true">
+  <div class="inner-wrapper" role="dialog" aria-labelledby="change_extra_title">
+    <button class="close-modal">
+      <i class="icon-remove"></i>
+      <span class="sr">
+        ${_('Close')}
+      </span>
+    </button>
+
+    <header>
+      <h2>
+        <span id="change_extra_title">${_("Change User Extra Data")}</span>
+        <span class="sr">,
+          ${_("window open")}
+        </span>
+      </h2>
+      <hr/>
+    </header>
+    <div id="change_extra_body">
+      <form id="change_extra_form">
+        <div id="change_extra_error" class="modal-form-error"> </div>
+        <fieldset>
+          <div class="input-group">
+            <label>${_('Please confirm your password:')}</label>
+            <input id="extra_password" value="" type="password" />
+            % for label, field in (('Employee ID:', 'employee'), ('Div:', 'div'), ('Senior Management:', 'sm'), ('Department:', 'dept'), ('Reports To:', 'reports_to')):
+              <label>
+                ${_(label)}
+              </label>
+              <input id="extra_${ field }_field" value="${ ue_field(user, field) }" type="text" />
+            % endfor
+          </div>
+          <div class="submit">
+            <input type="submit" id="submit_extra_change" value="${_('Change Extra User Data')}"/>
           </div>
         </fieldset>
       </form>
