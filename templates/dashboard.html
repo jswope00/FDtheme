@@ -450,7 +450,20 @@
 
     % if len(course_enrollment_pairs) > 0:
       <ul class="listing-courses">
-        % for course, enrollment in course_enrollment_pairs:
+        <%
+          def sort_key(cert_status):
+            status = cert_status.get('status', '')
+
+            if status in ('generating','ready'):
+              return 2 # Passed
+            elif status in ('notpassing',):
+              return 1 # Failed
+            else:
+              return 0 # Incomplete
+
+          sorted_course_enrollment_pairs = sorted(course_enrollment_pairs, key=lambda cep: sort_key(cert_statuses.get(cep[0].id)))
+        %>
+        % for course, enrollment in sorted_course_enrollment_pairs:
             <% show_courseware_link = (course.id in show_courseware_links_for) %>
             <% cert_status = cert_statuses.get(course.id) %>
             <% show_email_settings = (course.id in show_email_settings_for) %>

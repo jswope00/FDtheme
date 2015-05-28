@@ -65,16 +65,14 @@
     <section class="info">
       <hgroup>
         <p class="date-block">
-        % if course.has_ended():
-<div>70 /edx/app/edxapp/edx-platform/lms/templates/dashboard/_dashboard_course_listing.html</div>
-        ${_("Course Completed - {end_date}").format(end_date=course.end_date_text)}
-        % elif course.has_started():
-        ${_("Course Started - {start_date}").format(start_date=course.start_date_text)}
-        % elif course.start_date_is_still_default: # Course start date TBD
-        ${_("Course has not yet started")}
-        % else:   # hasn't started yet
-        ${_("Course Starts - {start_date}").format(start_date=course.start_date_text)}
-        % endif
+          <%
+            st = cert_status.get('status', '')
+            
+            if st in ('generating','ready'): st = 'Passed'
+            elif st in ('notpassing',): st = 'Failed'
+            else: st = 'Incomplete'
+          %>
+          ${st}
         </p>
         <h2 class="university">${get_course_about_section(course, 'university')}</h2>
         <h3>
