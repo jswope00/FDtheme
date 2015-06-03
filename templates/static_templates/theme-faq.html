@@ -7,7 +7,8 @@
 
 <section class="container about" style="width: auto;">
   <nav id="about-menu">
-    <a href="#" class="help">Help</a>
+    <a href="javascript:" rel="tab" data-target='help' data-hide-elem='navigation' class="help">Help</a>
+    <a href="javascript:" rel="tab" data-target='navigation' data-hide-elem='help' class="help">Navigation</a>
   </nav>
 
   <section class="vision">
@@ -25,6 +26,20 @@
         <a href="mailto:fdu@freshdirect.com">fdu@freshdirect.com</a></p>
       </article>
     </section>
+    <section class="message left" id="navigation" style="display:none;">
+      <article>
+        <iframe src="http://www.youtube.com/embed/uMLtp2-65ZE" width="600" height="500" frameborder="0" allowfullscreen></iframe>
+      </article>
+    </section>
   </section>
 
 </section>
+<script>
+$('a.help').on('click', function() {
+    var targetElem = $(this).data('target'),
+        hideElem = $(this).data('hide-elem');
+
+    $('#' + hideElem).hide();
+    $('#' + targetElem).show();
+})
+</script>
